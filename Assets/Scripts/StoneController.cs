@@ -9,7 +9,7 @@ public class StoneController : MonoBehaviour
 
     void Update()
     {
-        GetComponent<Rigidbody2D>().AddForce(new Vector3(0, -4f, 1f));
+        GetComponent<Rigidbody2D>().AddForce(new Vector3(0, -0.5f, 0.5f));
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

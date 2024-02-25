@@ -5,14 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-	GameManager gameManager;
 	GameObject key;
 
 	public int characterNumber = 0;
 
+	private int WATER = 0;
+	private int FIRE = 1;
+	private int AIR = 2;
+	private int EARTH = 3;
+
 	public Sprite[] slimeSprites = new Sprite[4];
 	public RuntimeAnimatorController[] slimeAnim = new RuntimeAnimatorController[4];
-
 
 	private AudioSource audioSource;
 	public AudioClip jumpClip;
@@ -27,23 +30,19 @@ public class PlayerController : MonoBehaviour
 	SpriteRenderer rend;
 	Animator animator;
 
-	Vector3 movement;
 	bool isJumping = false;
 	int jumpCount = 1;
 	float timer = 0;
 
 	public bool haveKey = false;
 
-	GameObject[] emotes = new GameObject[3];
+	GameObject[] emotes = new GameObject[3]; // 0. ¹°À½Ç¥, 1. ´À³¦Ç¥, 2. gameover
 
 	ObjectManager objectManager;
 	string obstacleObj;
 
-	// 0. ¹°À½Ç¥, 1. ´À³¦Ç¥, 3. Á×À½
-
 	void Awake()
 	{
-		gameManager = FindObjectOfType<GameManager>();
 		objectManager = FindObjectOfType<ObjectManager>();
 
 		for (int i = 0; i < emotes.Length; i++)
@@ -69,7 +68,12 @@ public class PlayerController : MonoBehaviour
 	
 	void Update()
 	{
-		if (characterNumber != 2 && Input.GetButtonDown("Jump") && jumpCount == 1)
+		if(GameManager.Instance.isGameover)
+        {
+			return;
+        }
+
+		if (characterNumber != AIR && Input.GetButtonDown("Jump") && jumpCount == 1)
 		{
 			isJumping = true;
 			jumpCount--;
@@ -77,14 +81,19 @@ public class PlayerController : MonoBehaviour
 			animator.SetBool("isJumping", true);
 		}
 
-		if(characterNumber == 0 && gameManager.isDoorOpen && Input.GetKeyDown(KeyCode.UpArrow))
+		if(characterNumber == WATER && GameManager.Instance.isDoorOpen && Input.GetKeyDown(KeyCode.UpArrow))
         {
 			gameObject.SetActive(false);
-			gameManager.clear = true;
+			GameManager.Instance.clear = true;
 		}
 
-		if(characterNumber == 0 && haveKey && Input.GetKeyDown(KeyCode.C))
-        {
+		if (characterNumber == WATER && haveKey && Input.GetKeyDown(KeyCode.C))
+		{
+			if (!SceneManager.GetActiveScene().name.Contains("Devil"))
+			{
+				return;
+			}
+
 			Vector2 newKeyPosition = gameObject.transform.position;
 
 			Transform keyTransform = key.GetComponent<Transform>();
@@ -94,15 +103,14 @@ public class PlayerController : MonoBehaviour
 			key.SetActive(true);
 
 			haveKey = false;
-			gameManager.waterHaveKey = false;
+			GameManager.Instance.waterHaveKey = false;
 
 			emotes[1].SetActive(true);
 			audioSource.PlayOneShot(keyDropClip);
 			Invoke("EmoteOff", 1f);
 		}
 
-
-		if(SceneManager.GetActiveScene().name.Contains("Devil"))
+		if (SceneManager.GetActiveScene().name.Contains("Devil"))
         {
 			if (Input.GetKeyDown(KeyCode.C))
 			{
@@ -115,25 +123,31 @@ public class PlayerController : MonoBehaviour
 				Animator playerAnimator = GetComponent<Animator>();
                 playerAnimator.runtimeAnimatorController = slimeAnim[characterNumber];
             }
-        }
+		}
 		timer += Time.deltaTime;
 
-		if (characterNumber == 1)
-        {
-			if (Input.GetKeyDown(KeyCode.X))
+		
+		if (Input.GetKeyDown(KeyCode.X))
+		{
+			if(characterNumber != FIRE)
             {
-				
-				if (timer > 1.5f)
+				emotes[0].SetActive(true);
+				audioSource.PlayOneShot(emoteClip);
+				Invoke("EmoteOff", 1f);
+			}
+			else
+            {
+				if (timer > 0.5f)
 				{
 					timer = 0;
-					
+
 					GameObject skillObstacle = objectManager.MakeObj(obstacleObj);
 					skillObstacle.transform.position = gameObject.transform.position;
 				}
 			}
 		}
 
-        if (characterNumber == 2)
+		if (characterNumber == AIR)
         {
 			rigid.gravityScale = -1;
 			rend.flipY = true;
@@ -147,7 +161,7 @@ public class PlayerController : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if(!gameManager.gameOver)
+		if(!GameManager.Instance.isGameover)
         {
 			Move();
 			Jump();
@@ -207,30 +221,29 @@ public class PlayerController : MonoBehaviour
 
 		if (collision.gameObject.tag == "key")
 		{
-			if (characterNumber == 0)
-            {
+			if (characterNumber == WATER)
+			{
 				haveKey = true;
-				gameManager.waterHaveKey = true;
+				GameManager.Instance.waterHaveKey = true;
 				audioSource.PlayOneShot(keyPickClip);
 				animator.SetBool("haveKey", true);
-            }
+			}
 			else
-            {
+			{
 				emotes[0].SetActive(true);
 				audioSource.PlayOneShot(emoteClip);
 				Invoke("EmoteOff", 1f);
 			}
-			
 		}
 
-		if(collision.gameObject.tag == "door")
-        {
-			if(haveKey)
-            {
+		if (collision.gameObject.tag == "door")
+		{
+			if (haveKey)
+			{
 				animator.SetBool("haveKey", false);
 			}
 			else
-            {
+			{
 				emotes[0].SetActive(true);
 				audioSource.PlayOneShot(emoteClip);
 				Invoke("EmoteOff", 1f);
@@ -239,18 +252,20 @@ public class PlayerController : MonoBehaviour
 
 		if (collision.gameObject.tag == "obstacle" || collision.gameObject.tag == "plant")
 		{
-			gameManager.gameOver = true;
+			GameManager.Instance.isGameover = true;
+			StartCoroutine(GameManager.Instance.GameOver());
 			animator.SetBool("isDie", true);
 
-			StartCoroutine(DieEmote());
+			emotes[2].SetActive(true);
+			//StartCoroutine(DieEmote());
 		}
 	}
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "button")
+		if (collision.gameObject.tag == "button")
         {
-			if(characterNumber != 3)
+			if(characterNumber != EARTH)
             {
 				emotes[0].SetActive(true);
 				audioSource.PlayOneShot(emoteClip);
@@ -268,7 +283,7 @@ public class PlayerController : MonoBehaviour
 
 	IEnumerator DieEmote()
 	{
-		while (gameManager.gameOver)
+		while (GameManager.Instance.isGameover)
 		{
 			emotes[2].SetActive(true);
 			yield return new WaitForSeconds(0.5f);

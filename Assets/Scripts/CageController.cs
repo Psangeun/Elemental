@@ -5,18 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class CageController : MonoBehaviour
 {
-    GameManager gameManager;
-
-    // Start is called before the first frame update
-    private void Awake()
-    {
-        gameManager = FindObjectOfType<GameManager>();
-    }
-
-
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "water" && gameManager.waterHaveKey)
+        if (collision.gameObject.tag == "water" && GameManager.Instance.waterHaveKey)
         {
             gameObject.SetActive(false);
             Invoke("SceneOver", 1f);
@@ -27,15 +18,15 @@ public class CageController : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name.Contains("Fire"))
         {
-            GameManager.gainFire = true;
+            GameManager.Instance.gainFire = true;
         }
         else if(SceneManager.GetActiveScene().name.Contains("Air"))
         {
-            GameManager.gainAir = true;
+            GameManager.Instance.gainAir = true;
         }
         else if(SceneManager.GetActiveScene().name.Contains("Earth"))
         {
-            GameManager.gainEarth = true;
+            GameManager.Instance.gainEarth = true;
         }
         SceneManager.LoadScene("BattleMap");
     }

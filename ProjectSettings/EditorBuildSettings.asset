@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Main.unity
+    guid: 852febdc714c2bb46ae887266169c021
+  - enabled: 1
     path: Assets/Scenes/BattleMap.unity
     guid: 315ab4972685a4208ba1acbcdbabe33b
   - enabled: 1
@@ -29,4 +32,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DevilPuzzle3.unity
     guid: 7f3a0f6bcfdd5de45bf3778c47b4e48b
+  - enabled: 1
+    path: Assets/Scenes/DevilPuzzle4.unity
+    guid: 2430cb8ea98ce764c806461646751d61
+  - enabled: 1
+    path: Assets/Scenes/DevilPuzzle5.unity
+    guid: 1d8b1d0c615f4c1418be561831e99111
   m_configObjects: {}

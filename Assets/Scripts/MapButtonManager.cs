@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class MapButtonManager : MonoBehaviour
 {
-    GameManager gameManager;
-
     public Button waterButton;
     public Button fireButton;
     public Button airButton;
@@ -24,10 +22,6 @@ public class MapButtonManager : MonoBehaviour
 
     float rotationSpeed = 200;
 
-    private void Awake()
-    {
-        gameManager = FindObjectOfType<GameManager>();
-    }
     void Start()
     {
         waterButton.interactable = false;
@@ -48,26 +42,26 @@ public class MapButtonManager : MonoBehaviour
         triangle3.transform.Rotate(new Vector3(0, rotationSpeed * Time.deltaTime, 0));
         triangle4.transform.Rotate(new Vector3(0, rotationSpeed * Time.deltaTime, 0));
 
-        if (GameManager.gainFire)
+        if (GameManager.Instance.gainFire)
         {
             fireButton.GetComponent<Image>().sprite = fireImage;
             fireButton.interactable = false;
             triangle2.SetActive(false);
         }
-        if(GameManager.gainAir)
+        if(GameManager.Instance.gainAir)
         {
             airButton.GetComponent<Image>().sprite = airImage;
             airButton.interactable = false;
             triangle3.SetActive(false);
         }
-        if (GameManager.gainEarth)
+        if (GameManager.Instance.gainEarth)
         {
             earthButton.GetComponent<Image>().sprite = earthImage;
             earthButton.interactable = false;
             triangle4.SetActive(false);
         }
 
-        if(GameManager.gainEarth && GameManager.gainAir && GameManager.gainFire)
+        if(GameManager.Instance.gainEarth && GameManager.Instance.gainAir && GameManager.Instance.gainFire)
         {
             SceneManager.LoadScene("DevilMap");
         }

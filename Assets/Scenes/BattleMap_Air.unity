@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cage
       objectReference: {fileID: 0}
+    - target: {fileID: 3631923694774337733, guid: 4c2d7e17cd3c3134bb6346778dceabbb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4933790468970440109, guid: 4c2d7e17cd3c3134bb6346778dceabbb, type: 3}
       propertyPath: gameManager
       value: 
@@ -6367,7 +6371,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1428860796
 AudioSource:
@@ -6992,6 +6996,14 @@ PrefabInstance:
     - target: {fileID: 1344861713521619059, guid: 882ac1592917042419707d8a7f7bb70d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6484226908755343075, guid: 882ac1592917042419707d8a7f7bb70d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -9.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6484226908755343075, guid: 882ac1592917042419707d8a7f7bb70d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 882ac1592917042419707d8a7f7bb70d, type: 3}

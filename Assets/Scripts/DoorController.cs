@@ -5,7 +5,6 @@ using UnityEngine;
 public class DoorController : MonoBehaviour
 {
     PlayerController playerController;
-    GameManager gameManager;
 
     public GameObject top;
     public GameObject bottom;
@@ -20,7 +19,6 @@ public class DoorController : MonoBehaviour
     void Awake()
     {
         playerController = FindObjectOfType<PlayerController>();
-        gameManager = FindObjectOfType<GameManager>();
     }
     void Start()
     {
@@ -34,7 +32,7 @@ public class DoorController : MonoBehaviour
         {
             rendTop.sprite = openTop;
             rendBottom.sprite = openBottom;
-            gameManager.isDoorOpen = true;
+            GameManager.Instance.isDoorOpen = true;
         }
     }
 }

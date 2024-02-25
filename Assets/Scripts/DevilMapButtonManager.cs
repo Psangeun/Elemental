@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class DevilMapButtonManager : MonoBehaviour
 {
-    GameManager gameManager;
-
     public Button elementButton;
     public Button devilButton;
     public Button kingButton;
@@ -21,10 +19,6 @@ public class DevilMapButtonManager : MonoBehaviour
 
     float rotationSpeed = 200;
 
-    private void Awake()
-    {
-        gameManager = FindObjectOfType<GameManager>();
-    }
     void Start()
     {
         elementButton.interactable = true;
@@ -43,13 +37,13 @@ public class DevilMapButtonManager : MonoBehaviour
         triangle2.transform.Rotate(new Vector3(0, rotationSpeed * Time.deltaTime, 0));
         triangle3.transform.Rotate(new Vector3(0, rotationSpeed * Time.deltaTime, 0));
 
-        if (gameManager.isAllClear)
+        if (GameManager.Instance.isAllClear)
         {
             devilButton.GetComponent<Image>().sprite = devilImage;
             devilButton.interactable = true;
             triangle2.SetActive(true);
         }
-        if (gameManager.isDevilDie)
+        if (GameManager.Instance.isDevilDie)
         {
             kingButton.GetComponent<Image>().sprite = kingImage;
             kingButton.interactable = true;

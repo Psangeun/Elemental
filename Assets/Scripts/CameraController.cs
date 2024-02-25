@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public GameManager gameManager;
-
     public GameObject player;
     
     Transform target;
@@ -13,7 +11,6 @@ public class CameraController : MonoBehaviour
     [SerializeField] Vector2 minCameraBoundary;
     [SerializeField] Vector2 maxCameraBoundary;
 
-    // Start is called before the first frame update
     void Start()
     {
         target = player.transform;
